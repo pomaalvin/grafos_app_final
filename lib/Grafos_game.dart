@@ -12,6 +12,7 @@ import 'package:flutter/gestures.dart';
 import 'dart:math';
 
 class LangawGame extends Game{
+  bool bloqueototal=false;
   bool bloquear=false;
   Size ScreenSize;
   double tileSize;
@@ -27,24 +28,15 @@ class LangawGame extends Game{
   }
   @override
   void render(Canvas canvas) {
-    Rect backM1=Rect.fromLTWH(0, 0, ScreenSize.width, ScreenSize.height/10);
-    TextSpan titulo=new TextSpan(text: "Grafos",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/25,fontFamily: 'CenturyGothic',fontWeight: FontWeight.bold));
-    TextPainter paintext=new TextPainter(text: titulo,textDirection: TextDirection.rtl);
-    paintext.layout();
-    double htext=paintext.height;
-    double wtext=paintext.width;
-    Rect backM2=Rect.fromLTWH(0, ScreenSize.height/10, ScreenSize.width, ScreenSize.height/10);
-    Rect backG=Rect.fromLTWH(0,ScreenSize.height/5, ScreenSize.width, ScreenSize.height);
+    Rect backM2=Rect.fromLTWH(0, 0, ScreenSize.width, ScreenSize.height/10);
+    Rect backG=Rect.fromLTWH(0,ScreenSize.height/10, ScreenSize.width, ScreenSize.height);
     Paint backGPaint=Paint();
     backGPaint.color=Color(0xffffffff);
     Paint backM1Paint=Paint();
-    backM1Paint.color=Color(0xff323031);
     Paint backM2Paint=Paint();
     backM2Paint.color=Color(0xff084C61);
     canvas.drawRect(backG, backGPaint);
-    canvas.drawRect(backM1, backM1Paint);
     canvas.drawRect(backM2, backM2Paint);
-    paintext.paint(canvas, Offset(ScreenSize.width/2-wtext/2,ScreenSize.height/20-htext/2));
     nodos.forEach((Nodo nodo)=>nodo.render(canvas));
     actividades.forEach((Actividad act)=>act.render(canvas));
     botones.forEach((Button boton)=> boton.render(canvas));
@@ -54,7 +46,7 @@ class LangawGame extends Game{
   void dibujarbotones(){
     var icon1=Icons.add;
     var icon2=Icons.keyboard_backspace;
-    var icon3=Icons.mode_edit;
+    var icon3=Icons.touch_app;
     var icon4=Icons.remove_circle;
     var icon5=Icons.clear;
     var icon6=Icons.table_chart;
@@ -64,14 +56,13 @@ class LangawGame extends Game{
     String icon4t=String.fromCharCode(icon4.codePoint);
     String icon5t=String.fromCharCode(icon5.codePoint);
     String icon6t=String.fromCharCode(icon6.codePoint);
-    botones.add(Button(this,Color(0xffFFC857), ScreenSize.width/35, ScreenSize.height/10+ScreenSize.height/20-ScreenSize.width/16,icon1t, Color(0xff323031),icon1.fontFamily));
-    botones.add(Button(this, Color(0xffFFC857), ScreenSize.width/35+tileSize , ScreenSize.height/10+ScreenSize.height/20-ScreenSize.width/16,icon2t, Color(0xff323031),icon2.fontFamily));
-    botones.add(Button(this, Color(0xffFFC857), ScreenSize.width/35+tileSize*2, ScreenSize.height/10+ScreenSize.height/20-ScreenSize.width/16,icon3t, Color(0xff323031),icon3.fontFamily));
-    botones.add(Button(this, Color(0xffFFC857), ScreenSize.width/35+tileSize*3, ScreenSize.height/10+ScreenSize.height/20-ScreenSize.width/16,icon4t, Color(0xff323031),icon4.fontFamily));
-    botones.add(Button(this, Color.fromARGB(255,112,16, 16), ScreenSize.width/35+tileSize*4, ScreenSize.height/10+ScreenSize.height/20-ScreenSize.width/16,icon5t, Color(0xffffffff),icon5.fontFamily));
-    botones.add(Button(this,Color(0xff323031),ScreenSize.width*4/35+tileSize*5, ScreenSize.height/10+ScreenSize.height/20-ScreenSize.width/16,icon6t, Color(0xffffffff),icon6.fontFamily));
-
-  }
+    botones.add(Button(this.ScreenSize,Color(0xffFFC857), ScreenSize.width/35,ScreenSize.height/20-ScreenSize.width/16,icon1t, Color(0xff323031),icon1.fontFamily));
+    botones.add(Button(this.ScreenSize, Color(0xffFFC857), ScreenSize.width/35+tileSize ,ScreenSize.height/20-ScreenSize.width/16,icon2t, Color(0xff323031),icon2.fontFamily));
+    botones.add(Button(this.ScreenSize, Color(0xffFFC857), ScreenSize.width/35+tileSize*2, ScreenSize.height/20-ScreenSize.width/16,icon3t, Color(0xff323031),icon3.fontFamily));
+    botones.add(Button(this.ScreenSize, Color(0xffFFC857), ScreenSize.width/35+tileSize*3, ScreenSize.height/20-ScreenSize.width/16,icon4t, Color(0xff323031),icon4.fontFamily));
+    botones.add(Button(this.ScreenSize, Color.fromARGB(255,112,16, 16), ScreenSize.width/35+tileSize*4, ScreenSize.height/20-ScreenSize.width/16,icon5t, Color(0xffffffff),icon5.fontFamily));
+    botones.add(Button(this.ScreenSize,Color(0xff323031),ScreenSize.width*4/35+tileSize*5,ScreenSize.height/20-ScreenSize.width/16,icon6t, Color(0xffffffff),icon6.fontFamily));
+    }
   void initialize() async{
     botones=List<Button>();
     selec=[true,false,false,false,false,false];
@@ -142,7 +133,7 @@ class LangawGame extends Game{
                       child: Text("Aceptar",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width*0.05),),
                       onPressed: (){
                         if(formkey.currentState.validate()){
-                          nodos.add(Nodo(this,x,y,texto.text));
+                          nodos.add(Nodo(this.ScreenSize,x,y,texto.text));
                           Navigator.pop(context);
                           bloquear=false;
                         }
@@ -199,13 +190,19 @@ TextEditingController texto=new TextEditingController();
                       TextFormField(
                           keyboardType: TextInputType.number,
                           controller: texto,
-                          maxLength: 10,
+                          maxLength: 5,
                           validator: (value){
                             if(value.isEmpty){
                               return"Ingrese un valor";
                             }
                             else{
-                              return null;
+                              if(double.parse(value)==0)
+                                {
+                                  return "El valor debe ser distinto a 0";
+                                }
+                              else{
+                                return null;
+                              }
                             }
                           }
                       ),
@@ -224,12 +221,12 @@ TextEditingController texto=new TextEditingController();
                               }
                             }
                             if(doble){
-                              actividades.add(Actividad(this,ni,nf,double.parse(texto.text.toString()),true));
+                              actividades.add(Actividad(this.ScreenSize,ni,nf,double.parse(texto.text.toString()),true));
                               Navigator.pop(context);
                               bloquear=false;
                             }
                             else{
-                            actividades.add(Actividad(this,ni,nf,double.parse(texto.text.toString()),false));
+                            actividades.add(Actividad(this.ScreenSize,ni,nf,double.parse(texto.text.toString()),false));
                             Navigator.pop(context);
                             bloquear=false;
                           }
@@ -408,10 +405,10 @@ TextEditingController texto=new TextEditingController();
         else{
 
           if(botones[5]==b){
-            if(nodos.length==0){
+            if(nodos.length==0||actividades.length==0){
               Fluttertoast.showToast(
                 
-          msg: "Cree al menos un nodo",
+          msg: "Cree al menos un nodo con una actividad",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           
@@ -436,65 +433,71 @@ TextEditingController texto=new TextEditingController();
       }
   }
   void ondragstart(Offset d){
-   if(selec.elementAt(2)){
-     if(d.dy>ScreenSize.height/5+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
-        &&d.dx<ScreenSize.width-ScreenSize.width/10&&d.dx>ScreenSize.width/10){
-     Nodo aux;
-     for(Nodo n in nodos){
-       if(n.posNodo.contains(d))
-       {
-         n.mover(d.dx, d.dy);
-         for(Actividad act in actividades){
-           if(act.ninicio==n&&act.nfinal==n){
-             act.moverigual(d.dx,d.dy);
-
-           }else if(act.ninicio==n)
+   if(!bloqueototal){
+     d=Offset(d.dx,d.dy-ScreenSize.height/10);
+     if(selec.elementAt(2)){
+       if(d.dy>ScreenSize.height/10+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
+           &&d.dx<ScreenSize.width-ScreenSize.width/10&&d.dx>ScreenSize.width/10){
+         Nodo aux;
+         for(Nodo n in nodos){
+           if(n.posNodo.contains(d))
            {
-             act.moverini(d.dx, d.dy);
-           }
-           else if(act.nfinal==n){
-             act.moverfin(d.dx, d.dy);
+             n.mover(d.dx, d.dy);
+             for(Actividad act in actividades){
+               if(act.ninicio==n&&act.nfinal==n){
+                 act.moverigual(d.dx,d.dy);
 
+               }else if(act.ninicio==n)
+               {
+                 act.moverini(d.dx, d.dy);
+               }
+               else if(act.nfinal==n){
+                 act.moverfin(d.dx, d.dy);
+
+               }
+             }
+             break;
            }
          }
-         break;
        }
      }
    }
   }
-  }
   void onTapDon(Offset d){
+    if(!bloqueototal){
+      d=Offset(d.dx,d.dy-ScreenSize.height/10);
 
-if(!bloquear)
-  {
-
-    if(d.dy>ScreenSize.height/5+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
-        &&d.dx<ScreenSize.width-ScreenSize.width/15&&d.dx>ScreenSize.width/15){
-      if(selec.elementAt(0))
+      if(!bloquear)
       {
-        addnodo(d);
-      }
-      else{
-        if(selec.elementAt(1))
-        {
-          addactividad(d);
 
-        }
-        else{
-          if(selec.elementAt(3)){
-            borrarop(d);
-
+        if(d.dy>ScreenSize.height/5+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
+            &&d.dx<ScreenSize.width-ScreenSize.width/15&&d.dx>ScreenSize.width/15){
+          if(selec.elementAt(0))
+          {
+            addnodo(d);
           }
+          else{
+            if(selec.elementAt(1))
+            {
+              addactividad(d);
+
+            }
+            else{
+              if(selec.elementAt(3)){
+                borrarop(d);
+
+              }
+            }
+          }
+
+        }
+        else
+        {
+          limpiarop(d);
+
         }
       }
-
     }
-    else
-    {
-      limpiarop(d);
-
-    }
-  }
   }
   }
   

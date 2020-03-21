@@ -1,9 +1,7 @@
 import 'dart:ui';
 
-import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grafos/Grafos_game.dart';
 
 class Button{
   Rect rect;
@@ -14,12 +12,12 @@ class Button{
   TextSpan texto;
   Color color;
   var para;
-  final LangawGame game;
-  Button(this.game,this.color,this.x,this.y,this.text,colortext,fontfamily){
-    texto=TextSpan(text: text ,style: TextStyle(color: colortext,fontFamily:fontfamily,fontSize: game.ScreenSize.width/15));
+  Size ScreenSize;
+  Button(this.ScreenSize,this.color,this.x,this.y,this.text,colortext,fontfamily){
+    texto=TextSpan(text: text ,style: TextStyle(color: colortext,fontFamily:fontfamily,fontSize: ScreenSize.width/15));
     ptext=TextPainter(text: texto,textDirection: TextDirection.rtl);
     ptext.layout();
-    rect=Rect.fromLTWH(x,y, game.ScreenSize.width/8, game.ScreenSize.width/8);
+    rect=Rect.fromLTWH(x,y, ScreenSize.width/8, ScreenSize.width/8);
     paintRect=Paint();
     paintRect.color=color;
 
@@ -29,7 +27,7 @@ class Button{
   void render(Canvas c){
     c.drawOval(rect,paintRect);
     double tw=ptext.width,th=ptext.height;
-    ptext.paint(c, new Offset(x+game.ScreenSize.width/16-tw/2, y+game.ScreenSize.width/16-th/2));
+    ptext.paint(c, new Offset(x+ScreenSize.width/16-tw/2, y+ScreenSize.width/16-th/2));
   }
   void update(double t){}
   void onTapDown(){}

@@ -11,19 +11,19 @@ class Nodo{
   TextPainter tp;
   double x,y;
   String text;
-  final LangawGame game;
-  Nodo(this.game,this.x,this.y,String this.text){
-    texto=new TextSpan(text: text.toUpperCase(),style: TextStyle(color: Colors.white,fontSize: game.tileSize/2));
+  Size ScreenSize;
+  Nodo(this.ScreenSize,this.x,this.y,String this.text){
+    texto=new TextSpan(text: text.toUpperCase(),style: TextStyle(color: Colors.white,fontSize: (ScreenSize.width/7)/2));
     tp = new TextPainter(text: texto, textAlign: TextAlign.center,textDirection: TextDirection.ltr);
     tp.layout();
-    posNodo=Rect.fromLTWH(x-game.tileSize/2, y-game.tileSize/2, game.tileSize, game.tileSize);
+    posNodo=Rect.fromLTWH(x-(ScreenSize.width/7)/2, y-(ScreenSize.width/7)/2, (ScreenSize.width/7), (ScreenSize.width/7));
     cent=Offset(x,y);
-    centtext=Offset(x-tp.width/2,y-game.tileSize/3.8);
+    centtext=Offset(x-tp.width/2,y-(ScreenSize.width/7)/3.8);
     nodoPaint=Paint();
     nodoPaint.color=Color(0xff323031);
   }
   void render(Canvas c){
-    c.drawCircle(cent,game.tileSize/2,nodoPaint);
+    c.drawCircle(cent,(ScreenSize.width/7)/2,nodoPaint);
     tp.paint(c, centtext);
   }
   void update(double t){
@@ -35,7 +35,7 @@ class Nodo{
       centtext=centtext.translate(x-this.x,y-this.y);
       this.x=x;
       this.y=y;      
-    posNodo=Rect.fromLTWH(x-game.tileSize/2, y-game.tileSize/2, game.tileSize, game.tileSize);
+    posNodo=Rect.fromLTWH(x-(ScreenSize.width/7)/2, y-(ScreenSize.width/7)/2, (ScreenSize.width/7), (ScreenSize.width/7));
 
   }
   void seleccionar(){
