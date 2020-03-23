@@ -5,6 +5,8 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grafos/Grafos_game.dart';
+import 'package:grafos/Main_result_jo.dart';
+import 'package:grafos/Result_johnson.dart';
 import 'package:grafos/Tabla.dart';
 import 'package:grafos/componentes/Button.dart';
 import 'package:grafos/componentes/Actividad.dart';
@@ -13,6 +15,7 @@ import 'package:flutter/gestures.dart';
 import 'dart:math';
 
 class Johnson extends Game{
+  bool bloqueototal=false;
   bool bloquear=false;
   Size ScreenSize;
   double tileSize;
@@ -420,7 +423,7 @@ class Johnson extends Game{
               );
             }
             else{
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Tabla(nodos,actividades)));
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Main_Resjohn(this,nodos,actividades)));
 
 
             }
@@ -434,66 +437,70 @@ class Johnson extends Game{
     }
   }
   void ondragstart(Offset d){
-    d=Offset(d.dx,d.dy-ScreenSize.height/10);
-    if(selec.elementAt(2)){
-      if(d.dy>ScreenSize.height/10+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
-          &&d.dx<ScreenSize.width-ScreenSize.width/10&&d.dx>ScreenSize.width/10){
-        Nodo aux;
-        for(Nodo n in nodos){
-          if(n.posNodo.contains(d))
-          {
-            n.mover(d.dx, d.dy);
-            for(Actividad act in actividades){
-              if(act.ninicio==n&&act.nfinal==n){
-                act.moverigual(d.dx,d.dy);
+    if(!bloqueototal){
+      d=Offset(d.dx,d.dy-ScreenSize.height/10);
+      if(selec.elementAt(2)){
+        if(d.dy>ScreenSize.height/10+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
+            &&d.dx<ScreenSize.width-ScreenSize.width/10&&d.dx>ScreenSize.width/10){
+          Nodo aux;
+          for(Nodo n in nodos){
+            if(n.posNodo.contains(d))
+            {
+              n.mover(d.dx, d.dy);
+              for(Actividad act in actividades){
+                if(act.ninicio==n&&act.nfinal==n){
+                  act.moverigual(d.dx,d.dy);
 
-              }else if(act.ninicio==n)
-              {
-                act.moverini(d.dx, d.dy);
-              }
-              else if(act.nfinal==n){
-                act.moverfin(d.dx, d.dy);
+                }else if(act.ninicio==n)
+                {
+                  act.moverini(d.dx, d.dy);
+                }
+                else if(act.nfinal==n){
+                  act.moverfin(d.dx, d.dy);
 
+                }
               }
+              break;
             }
-            break;
           }
         }
       }
     }
   }
   void onTapDon(Offset d){
-    print("ene este adsf");
-    d=Offset(d.dx,d.dy-ScreenSize.height/10);
+    if(!bloqueototal){
+      print("ene este adsf");
+      d=Offset(d.dx,d.dy-ScreenSize.height/10);
 
-    if(!bloquear)
-    {
+      if(!bloquear)
+      {
 
-      if(d.dy>ScreenSize.height/5+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
-          &&d.dx<ScreenSize.width-ScreenSize.width/15&&d.dx>ScreenSize.width/15){
-        if(selec.elementAt(0))
-        {
-          addnodo(d);
-        }
-        else{
-          if(selec.elementAt(1))
+        if(d.dy>ScreenSize.height/10+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
+            &&d.dx<ScreenSize.width-ScreenSize.width/10&&d.dx>ScreenSize.width/10){
+          if(selec.elementAt(0))
           {
-            addactividad(d);
-
+            addnodo(d);
           }
           else{
-            if(selec.elementAt(3)){
-              borrarop(d);
+            if(selec.elementAt(1))
+            {
+              addactividad(d);
 
             }
+            else{
+              if(selec.elementAt(3)){
+                borrarop(d);
+
+              }
+            }
           }
+
         }
+        else
+        {
+          limpiarop(d);
 
-      }
-      else
-      {
-        limpiarop(d);
-
+        }
       }
     }
   }
