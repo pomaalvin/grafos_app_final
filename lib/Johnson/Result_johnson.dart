@@ -21,8 +21,9 @@ class Result_jo extends Game{
   BuildContext context;
   List<Actividad> actividades;
   List<Nodo_johnson> NodosJo;
+  String tipo="max";
   List<Valor> valores;
-  Result_jo(this.context,this.nodos,this.actividades){
+  Result_jo(this.context,this.tipo,this.nodos,this.actividades){
     initialize();
   }
   @override
@@ -33,7 +34,7 @@ class Result_jo extends Game{
     backGPaint.color=Color(0xffffffff);
     Paint backM1Paint=Paint();
     Paint backM2Paint=Paint();
-    backM2Paint.color=Color(0xff084C61);
+    backM2Paint.color=Color(0xffffffff);
     canvas.drawRect(backG, backGPaint);
     canvas.drawRect(backM2, backM2Paint);
     nodos.forEach((Nodo nodo)=>nodo.render(canvas));
@@ -86,8 +87,15 @@ class Result_jo extends Game{
             Nodo_johnson finJon=sacarNodoJ(nodosfin.elementAt(i).nfinal);
             Nodo_johnson iniJon=sacarNodoJ(nodosfin.elementAt(i).ninicio);
             if(finJon.text2!=0.0){
-              if(finJon.text2<nodosfin.elementAt(i).valor+iniJon.text2){
-                finJon.text2=nodosfin.elementAt(i).valor+iniJon.text2;
+              if(tipo=="max"){
+                if(finJon.text2<nodosfin.elementAt(i).valor+iniJon.text2){
+                  finJon.text2=nodosfin.elementAt(i).valor+iniJon.text2;
+                }
+              }
+              else{
+                if(finJon.text2>nodosfin.elementAt(i).valor+iniJon.text2){
+                  finJon.text2=nodosfin.elementAt(i).valor+iniJon.text2;
+                }
               }
             }
             else{

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grafos/Asignacion/Asignacion_prin.dart';
 import 'package:grafos/componentes/Actividad.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
@@ -54,7 +55,10 @@ class _Tabla extends State<Tabla>{
       }
       matriz.add(aux);
     }
-    List<int> filael=new List<int>();
+
+/*
+
+List<int> filael=new List<int>();
     List<int> colel=new List<int>();
     for(int i=0;i<matriz.length;i++){
       int c=0;
@@ -94,7 +98,7 @@ class _Tabla extends State<Tabla>{
         matriz[j].removeAt(colel[i]);
       }
     }
-
+* */
 
   }
   @override
@@ -108,7 +112,24 @@ class _Tabla extends State<Tabla>{
         children: <Widget>[
           Container(
             height: ScreenSize.height/10,
-            color: Colors.white,
+            color: Color(0xff084C61),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Container(
+                  child: MaterialButton(
+
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>
+                          Asignacion_prin(matriz,nodos2,nodoscol)));
+                    },
+                    child: Text('Asignacion',style: TextStyle(color: Color(0xff084C61))),
+                    color: Color(0xffFFC857),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height/10-2)),
+                  ),
+                )
+              ],
+            ),
             width: ScreenSize.width,
           ),
           Container(

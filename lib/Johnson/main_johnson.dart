@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grafos/Grafos_game.dart';
 import 'package:flutter/gestures.dart';
-import 'package:grafos/grafos_john.dart';
+import 'package:grafos/Johnson/grafos_john.dart';
 class Main_john extends StatefulWidget{
   LangawGame gameant;
   @override

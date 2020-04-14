@@ -5,8 +5,8 @@ import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:grafos/Grafos_game.dart';
-import 'package:grafos/Main_result_jo.dart';
-import 'package:grafos/Result_johnson.dart';
+import 'package:grafos/Johnson/Main_result_jo.dart';
+import 'package:grafos/Johnson/Result_johnson.dart';
 import 'package:grafos/Tabla.dart';
 import 'package:grafos/componentes/Button.dart';
 import 'package:grafos/componentes/Actividad.dart';
@@ -48,7 +48,7 @@ class Johnson extends Game{
   void dibujarbotones(){
     var icon1=Icons.add;
     var icon2=Icons.keyboard_backspace;
-    var icon3=Icons.mode_edit;
+    var icon3=Icons.touch_app;
     var icon4=Icons.remove_circle;
     var icon5=Icons.clear;
     var icon6=Icons.done;
@@ -163,14 +163,18 @@ class Johnson extends Game{
 
   }
   void llamarAct(Nodo ni,Nodo nf){
-    if(verificaract(nf)){
+    if(verificaract(nf)&&ni!=nf){
       TextEditingController texto=new TextEditingController();
       final formkey=GlobalKey<FormState>();
       showDialog(context: context,
           builder: (BuildContext context){
             bloquear=true;
             return WillPopScope(
-              onWillPop: ()async {
+              onWillPop: ()async {for(Nodo nodo in nodos){
+                nodo.deseleccionar();
+              }
+
+              elegidos.clear();
 
                 bloquear=false;
                 return true;
@@ -229,6 +233,11 @@ class Johnson extends Game{
                                 }
                                 else{
                                   actividades.add(Actividad(this.ScreenSize,ni,nf,double.parse(texto.text.toString()),false));
+                                  for(Nodo nodo in nodos){
+                                    nodo.deseleccionar();
+                                  }
+
+                                  elegidos.clear();
                                   Navigator.pop(context);
                                   bloquear=false;
                                 }
@@ -252,7 +261,7 @@ class Johnson extends Game{
         n.deseleccionar();
       }
       Fluttertoast.showToast(
-          msg: "Ya existe la Actividad",
+          msg: "No se puede añadir la Actividad",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
 
@@ -350,18 +359,19 @@ class Johnson extends Game{
   }
 
   void limpiarop(d){
-
-    for(Nodo elegi in elegidos){
-      elegi.deseleccionar();
-    }
-    elegidos.clear();
     int c=0;
-    for(int i=0;i<6;i++){
-      botones.elementAt(i).deseleccion();
 
-    }
+
     for(Button b in botones){
       if(b.rect.contains(d)){
+        for(Nodo elegi in elegidos){
+          elegi.deseleccionar();
+        }
+        elegidos.clear();
+        for(int i=0;i<6;i++){
+          botones.elementAt(i).deseleccion();
+
+        }
         b.seleccion();
         selec=[false,false,false,false,false,false];
         selec.insert(c, true);
@@ -423,7 +433,36 @@ class Johnson extends Game{
               );
             }
             else{
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Main_Resjohn(this,nodos,actividades)));
+              showDialog(context: context,
+                  builder:(BuildContext context){
+                    return AlertDialog(
+                      backgroundColor: Color(0xff323031).withOpacity(0.8),
+                      title: Text("Tipo?",textAlign: TextAlign.center,style: TextStyle(color: Colors.white.withOpacity(0.8)),),
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          MaterialButton(
+                              color: Color(0xff084C61),
+                              child: Text("Maximizar",style: TextStyle(color: Colors.white),),
+                              onPressed: (){
+                                Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Main_Resjohn(this,"max",nodos,actividades)));
+                              }),
+                          Container(width: 10,height: 0,),
+                          MaterialButton(
+                              color: Color(0xffFFC857),
+                              child: Text("Minimizar"),
+                              onPressed: (){
+                                Navigator.pop(context);
+                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Main_Resjohn(this,"min",nodos,actividades)));
+
+
+                              }),
+                        ],
+                      ),
+
+                    );
+                  });
 
 
             }
