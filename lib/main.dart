@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grafos/Grafos_game.dart';
 import 'package:flutter/gestures.dart';
-import 'package:grafos/main_johnson.dart';
+import 'package:grafos/Johnson/main_johnson.dart';
 void main(){
   runApp(
       MaterialApp(

@@ -470,8 +470,8 @@ TextEditingController texto=new TextEditingController();
       if(!bloquear)
       {
 
-        if(d.dy>ScreenSize.height/5+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
-            &&d.dx<ScreenSize.width-ScreenSize.width/15&&d.dx>ScreenSize.width/15){
+        if(d.dy>ScreenSize.height/10+ScreenSize.height/20&&d.dy<ScreenSize.height-ScreenSize.height/20
+            &&d.dx<ScreenSize.width-ScreenSize.width/10&&d.dx>ScreenSize.width/10){
           if(selec.elementAt(0))
           {
             addnodo(d);

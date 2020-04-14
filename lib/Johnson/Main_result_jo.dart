@@ -3,34 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grafos/Grafos_game.dart';
 import 'package:flutter/gestures.dart';
-import 'package:grafos/Result_johnson.dart';
+import 'package:grafos/Johnson/Result_johnson.dart';
 import 'package:grafos/componentes/Actividad.dart';
 import 'package:grafos/componentes/Nodo.dart';
-import 'package:grafos/grafos_john.dart';
+import 'package:grafos/Johnson/grafos_john.dart';
 class Main_Resjohn extends StatefulWidget{
   Johnson gameant;
+  String tipo="max";
   List<Nodo> nodos;
   List<Actividad> actividades;
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _Main_Resjohn(gameant,this.nodos,this.actividades);
+    return _Main_Resjohn(gameant,this.tipo,this.nodos,this.actividades);
   }
-  Main_Resjohn(this.gameant,this.nodos,this.actividades);
+  Main_Resjohn(this.gameant,this.tipo,this.nodos,this.actividades);
 
 }
 
 class _Main_Resjohn extends State<Main_Resjohn>{
   List<Nodo> nodos;
+  String tipo="max";
   List<Actividad> actividades;
   Result_jo game;
   Johnson gameant;
-  _Main_Resjohn(this.gameant,this.nodos,this.actividades);
+  _Main_Resjohn(this.gameant,this.tipo,this.nodos,this.actividades);
   @override
   void iniciar()async{
 
     WidgetsFlutterBinding.ensureInitialized();
-    game=new Result_jo(context,nodos,actividades);
+    game=new Result_jo(context,tipo,nodos,actividades);
     await Flame.util.fullScreen();
     await Flame.util.setOrientation(DeviceOrientation.portraitUp);
   }
