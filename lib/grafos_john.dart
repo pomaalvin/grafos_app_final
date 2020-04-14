@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
@@ -140,8 +139,6 @@ class Johnson extends Game{
                               bloquear=false;
                             }
                           },
-
-
                         )
                       ],
                     ),
