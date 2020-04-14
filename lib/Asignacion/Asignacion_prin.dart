@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grafos/Asignacion/Column_MaxMin.dart';
 import 'package:grafos/componentes/Nodo.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 class Asignacion_prin extends StatefulWidget {
@@ -15,6 +16,9 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
   List<List<double>> matriz=new List<List<double>>();
   List<String> nodos2=List<String>();
   List<String> nodoscol=List<String>();
+  ScrollController controller1=ScrollController();
+  ScrollController controller2=ScrollController();
+  ScrollController controller3=ScrollController();
   _Asignacion_prinState(List<List<double>> matriz,nodos2,nodoscol){
     for(int i=0;i<matriz.length;i++){
       List<double> aux=new List<double>();
@@ -114,7 +118,7 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
         children: <Widget>[
           Container(
             height: ScreenSize.height/10,
-            color: Color(0xff084C61),
+            color: Color(0xff6B1A6F),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -137,10 +141,48 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
               color: Color(0xff323031),
               height: ScreenSize.height/10,
               width: ScreenSize.width,
-              child: Center(
-                  child: Text("Matriz",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
-                  ),
-                  ))),
+              child: Row(
+                  children: [
+                    Container(
+                      width:ScreenSize.width*0.6 ,
+                      child: Center(
+                        child:Text("Matriz",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
+                        ),
+
+                        ),
+                      )
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      width: ScreenSize.width*0.2,
+                      child: MaterialButton(
+                        padding: EdgeInsets.all(1),
+                        height: ScreenSize.height/10-5,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height)),
+                        onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Col_max_min(matriz,nodoscol,nodos2,"min")));
+                        },
+                        color: Color(0xffFFC857),
+                        child: Text('Min',style: TextStyle(color: Color(0xff084C61),fontSize: ScreenSize.width*0.04),),
+                      ),
+                    ),
+
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      width: ScreenSize.width*0.2,
+                      child: MaterialButton(
+                        padding: EdgeInsets.all(1),
+                        height: ScreenSize.height/10-5,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height)),
+                        onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Col_max_min(matriz,nodoscol,nodos2,"max")));
+
+                        },
+                        color: Color(0xffFFC857),
+                        child: Text('Max',style: TextStyle(color: Color(0xff084C61),fontSize: ScreenSize.width*0.04),),
+                      ),
+                    ),
+                  ])),
           Container(
             height: ScreenSize.height-ScreenSize.height/5,
             width: ScreenSize.width,
@@ -155,6 +197,9 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
                       elevationColor: Colors.black,
 
                       leftHandSideColBackgroundColor: Colors.black,elevation: 10,
+                      controler1: controller1,
+                      controler2: controller2,
+                      controler3: controller3,
 
                       leftHandSideColumnWidth: (ScreenSize.width-ScreenSize.width/10)/7,
                       rightHandSideColumnWidth:(ScreenSize.width-2*ScreenSize.width/20)/7*(nodos2.length-1),
@@ -178,7 +223,9 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
 
                     )
                 )
-            ),)
+            ),
+
+          )
 
         ],
       ),

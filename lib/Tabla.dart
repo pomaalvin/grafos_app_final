@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grafos/Asignacion/Asignacion_prin.dart';
+import 'package:grafos/Grafos_game.dart';
 import 'package:grafos/componentes/Actividad.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
@@ -9,27 +11,33 @@ import 'componentes/Nodo.dart';
 class Tabla extends StatefulWidget{
 List<Nodo> nodos;
 List<Actividad> activi ;
+LangawGame bloqueo;
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createSta
-    return _Tabla(nodos,activi);
+    return _Tabla(nodos,activi,bloqueo);
   }
 
-  Tabla(this.nodos,this.activi);
+  Tabla(this.nodos,this.activi,this.bloqueo);
 
 }
 class _Tabla extends State<Tabla>{
   List<List<double>> matriz=new List<List<double>>();
+  ScrollController controller1=ScrollController();
+  ScrollController controller2=ScrollController();
+  ScrollController controller3=ScrollController();
   List<Nodo> nodos;
   List<String> nodos2;
   List<String> nodoscol;
   List<Actividad> activi ;
-  _Tabla(this.nodos,this.activi);
+  LangawGame bloqueo;
+  _Tabla(this.nodos,this.activi,this.bloqueo);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     crearmatriz();
+
 
 
 
@@ -106,80 +114,91 @@ List<int> filael=new List<int>();
     // TODO: implement build
     Size ScreenSize=MediaQuery.of(context).size;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: ScreenSize.height/10,
-            color: Color(0xff084C61),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  child: MaterialButton(
-
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>
-                          Asignacion_prin(matriz,nodos2,nodoscol)));
-                    },
-                    child: Text('Asignacion',style: TextStyle(color: Color(0xff084C61))),
-                    color: Color(0xffFFC857),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height/10-2)),
-                  ),
-                )
-              ],
-            ),
-            width: ScreenSize.width,
-          ),
-          Container(
-              color: Color(0xff323031),
+    return WillPopScope(
+      onWillPop: ()async{
+        setState(() {
+          bloqueo.bloqueototal=false;
+        });
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: <Widget>[
+            Container(
               height: ScreenSize.height/10,
+              color: Color(0xff084C61),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Container(
+                    child: MaterialButton(
+
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>
+                            Asignacion_prin(matriz,nodos2,nodoscol)));
+                      },
+                      child: Text('Asignacion',style: TextStyle(color: Color(0xff084C61))),
+                      color: Color(0xffFFC857),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height/10-2)),
+                    ),
+                  )
+                ],
+              ),
               width: ScreenSize.width,
-              child: Center(
-                  child: Text("Matriz",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
-                  ),
-                  ))),
-          Container(
-            height: ScreenSize.height-ScreenSize.height/5,
-            width: ScreenSize.width,
-            child:Center(
+            ),
+            Container(
+                color: Color(0xff323031),
+                height: ScreenSize.height/10,
+                width: ScreenSize.width,
+                child: Center(
+                    child: Text("Matriz",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
+                    ),
+                    ))),
+            Container(
+              height: ScreenSize.height-ScreenSize.height/5,
+              width: ScreenSize.width,
+              child:Center(
 
-            child: Container(
-              padding: EdgeInsets.all(ScreenSize.width/20),
-                height:nodoscol.length>6?(ScreenSize.width-ScreenSize.width/10)+2*ScreenSize.width/20: (ScreenSize.width-ScreenSize.width/10)/7*(nodoscol.length+1)+2*ScreenSize.width/20,
-                width: (ScreenSize.width-ScreenSize.width/10)/7*nodos2.length+2*ScreenSize.width/20,
-              child: HorizontalDataTable(
-                
-                elevationColor: Colors.black,
+                  child: Container(
+                      padding: EdgeInsets.all(ScreenSize.width/20),
+                      height:nodoscol.length>6?(ScreenSize.width-ScreenSize.width/10)+2*ScreenSize.width/20: (ScreenSize.width-ScreenSize.width/10)/7*(nodoscol.length+1)+2*ScreenSize.width/20,
+                      width: (ScreenSize.width-ScreenSize.width/10)/7*nodos2.length+2*ScreenSize.width/20,
+                      child: HorizontalDataTable(
 
-                leftHandSideColBackgroundColor: Colors.black,elevation: 10,
+                        elevationColor: Colors.black,
+                        controler1: controller1,
+                        controler2: controller2,
+                        controler3: controller3,
 
-                leftHandSideColumnWidth: (ScreenSize.width-ScreenSize.width/10)/7,
-                rightHandSideColumnWidth:(ScreenSize.width-2*ScreenSize.width/20)/7*(nodos2.length-1),
-                isFixedHeader: true,
+                        leftHandSideColBackgroundColor: Colors.black,elevation: 10,
 
-                rightSideItemBuilder: _datos,
-                itemCount: nodoscol.length,
-                leftSideItemBuilder: _primera_col,
-                headerWidgets:
-                  nodos2.map((name)=>Container(
-                    decoration:BoxDecoration(
-      color: Color(0xff084C61),border: name!=nodos2.elementAt(0)?Border(right: BorderSide(color: Colors.black),bottom: BorderSide(color: Colors.black),top: BorderSide(color: Colors.black)):Border.all(color: Colors.black)),
-                    child: Center(child: Text(name.toUpperCase(),style: TextStyle(color:Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold),),),
-                    width: (ScreenSize.width-2*ScreenSize.width/20)/(6+1),
-                    height: (ScreenSize.width-ScreenSize.width/10)/7,
-                    padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                    alignment: Alignment.centerLeft,
+                        leftHandSideColumnWidth: (ScreenSize.width-ScreenSize.width/10)/7,
+                        rightHandSideColumnWidth:(ScreenSize.width-2*ScreenSize.width/20)/7*(nodos2.length-1),
+                        isFixedHeader: true,
 
-                  )).toList(),
+                        rightSideItemBuilder: _datos,
+                        itemCount: nodoscol.length,
+                        leftSideItemBuilder: _primera_col,
+                        headerWidgets:
+                        nodos2.map((name)=>Container(
+                          decoration:BoxDecoration(
+                              color: Color(0xff084C61),border: name!=nodos2.elementAt(0)?Border(right: BorderSide(color: Colors.black),bottom: BorderSide(color: Colors.black),top: BorderSide(color: Colors.black)):Border.all(color: Colors.black)),
+                          child: Center(child: Text(name.toUpperCase(),style: TextStyle(color:Colors.white.withOpacity(0.8), fontWeight: FontWeight.bold),),),
+                          width: (ScreenSize.width-2*ScreenSize.width/20)/(6+1),
+                          height: (ScreenSize.width-ScreenSize.width/10)/7,
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          alignment: Alignment.centerLeft,
+
+                        )).toList(),
 
 
-              )
-            )
+                      )
+                  )
               ),)
 
-        ],
+          ],
+        ),
       ),
     );
 
