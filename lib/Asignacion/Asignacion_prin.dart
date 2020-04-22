@@ -205,7 +205,9 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
                         child: Text('Max',style: TextStyle(color: Color(0xff084C61),fontSize: ScreenSize.width*0.04),),
                       ),
                     ),
-                  ])),
+                  ]
+              )
+          ),
           Container(
             height: ScreenSize.height-ScreenSize.height/5,
             width: ScreenSize.width,
@@ -243,14 +245,7 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
                       )).toList(),
                     )
                 )
-<<<<<<< HEAD
             ),)
-=======
-            ),
-
-          )
-
->>>>>>> ce243937734ec39ce28592ad919c14c129f3c87d
         ],
       ),
     );
