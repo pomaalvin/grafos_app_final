@@ -120,7 +120,6 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
               children: <Widget>[
                 Container(
                   child: MaterialButton(
-
                     onPressed: (){
                       Navigator.pop(context);
                     },
@@ -145,7 +144,6 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
             height: ScreenSize.height-ScreenSize.height/5,
             width: ScreenSize.width,
             child:Center(
-
                 child: Container(
                     padding: EdgeInsets.all(ScreenSize.width/20),
                     height:nodoscol.length>6?(ScreenSize.width-ScreenSize.width/10)+2*ScreenSize.width/20: (ScreenSize.width-ScreenSize.width/10)/7*(nodoscol.length+1)+2*ScreenSize.width/20,
@@ -174,16 +172,12 @@ class _Asignacion_prinState extends State<Asignacion_prin> {
                         alignment: Alignment.centerLeft,
 
                       )).toList(),
-
-
                     )
                 )
             ),)
-
         ],
       ),
     );
-
   }
   Widget _primera_col(BuildContext context,int index){
     Size Screen=MediaQuery.of(context).size;
