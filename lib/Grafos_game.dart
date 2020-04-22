@@ -419,8 +419,9 @@ TextEditingController texto=new TextEditingController();
               );
             }
             else{
-              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Tabla(nodos,actividades)));
-         
+              bloqueototal=true;
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Tabla(nodos,actividades,this)));
+
               
             }
             
