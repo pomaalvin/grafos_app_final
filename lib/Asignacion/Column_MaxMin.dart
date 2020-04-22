@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:grafos/Asignacion/Row_max_min.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 class Col_max_min extends StatefulWidget {
   @override
-  _Col_max_minState createState() => _Col_max_minState(this.matriz,this.nodos2,this.nodoscol,this.tipo);
-  Col_max_min(this.matriz,this.nodoscol,this.nodos2,this.tipo);
+  _Col_max_minState createState() => _Col_max_minState(this.matriz,this.nodos2,this.nodoscol,this.tipo,this.direct);
+  Col_max_min(this.matriz,this.nodoscol,this.nodos2,this.tipo,this.matrizorig,this.direct);
   List<List<double>> matriz=new List<List<double>>();
+  List<List<double>> matrizorig=new List<List<double>>();
   List<String> nodos2;
   List<String> nodoscol;
   String tipo;
+  bool direct;
 }
 
 class _Col_max_minState extends State<Col_max_min> {
   List<List<double>> matriz=new List<List<double>>();
   List<String> nodos2=List<String>();
   List<String> nodoscol=List<String>();
+  bool direct;
   List<double> min_maxcol=new List<double>();
   ScrollController controller1=ScrollController();
   ScrollController controller2=ScrollController();
   ScrollController controller3=ScrollController();
   ScrollController controlleraux2=ScrollController();
   String tipo;
-  _Col_max_minState(List<List<double>> this.matriz,this.nodos2,this.nodoscol,this.tipo);
+  _Col_max_minState(List<List<double>> this.matriz,this.nodos2,this.nodoscol,this.tipo,this.direct);
   @override
   void initState() {
     controller3.addListener((){
@@ -49,12 +53,22 @@ class _Col_max_minState extends State<Col_max_min> {
     }
     print(min_maxcol);
     print(matriz);
+
   }
+  bool bloquedirect=false;
+
   @override
   Widget build(BuildContext context) {
 
     Size ScreenSize=MediaQuery.of(context).size;
-
+    if(direct&&!bloquedirect){
+      SchedulerBinding.instance.addPostFrameCallback((_){
+        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context)=>Row_max_min(matriz,nodoscol,nodos2,tipo,min_maxcol,widget.matrizorig,direct)));
+        setState(() {
+          bloquedirect=!bloquedirect;
+        });
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -89,7 +103,7 @@ class _Col_max_minState extends State<Col_max_min> {
                     Container(
                         width:ScreenSize.width*0.8 ,
                         child: Center(
-                          child:Text("Matriz",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
+                          child:Text(tipo=="min"?"Minimizando":"Maximizando",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
                           ),
 
                           ),
@@ -104,7 +118,7 @@ class _Col_max_minState extends State<Col_max_min> {
                         height: ScreenSize.height/10-5,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height)),
                         onPressed: (){
-                          Navigator.push(context,MaterialPageRoute(builder: (BuildContext context)=>Row_max_min(matriz,nodoscol,nodos2,tipo,min_maxcol)));
+                          Navigator.push(context,MaterialPageRoute(builder: (BuildContext context)=>Row_max_min(matriz,nodoscol,nodos2,tipo,min_maxcol,widget.matrizorig,direct)));
                         },
                         color: Color(0xffFFC857),
                         child: Icon(Icons.arrow_forward,color: Color(0xff084C61),size: ScreenSize.width*0.07),
@@ -112,7 +126,13 @@ class _Col_max_minState extends State<Col_max_min> {
                     ),
                   ])),
           Container(
-            height: ScreenSize.height-ScreenSize.height/5,
+            height: 100,
+            child: Center(
+              child: Text('Paso 1',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Color(0xff084C61)),),
+            ),
+          ),
+          Container(
+            height: ScreenSize.height-ScreenSize.height/5-100,
             width: ScreenSize.width,
             child:Center(
 

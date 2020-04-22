@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:grafos/Asignacion/Resultado.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 class Row_max_min extends StatefulWidget {
   @override
-  _Row_max_minState createState() => _Row_max_minState(this.matriz,this.nodos2,this.nodoscol,this.tipo,this.min_maxcol);
-  Row_max_min(this.matriz,this.nodoscol,this.nodos2,this.tipo,this.min_maxcol);
+  _Row_max_minState createState() => _Row_max_minState(this.matriz,this.nodos2,this.nodoscol,this.tipo,this.min_maxcol,this.direct);
+  Row_max_min(this.matriz,this.nodoscol,this.nodos2,this.tipo,this.min_maxcol,this.matrizorig,this.direct);
   List<List<double>> matriz=new List<List<double>>();
+  List<List<double>> matrizorig=new List<List<double>>();
   List<String> nodos2;
   List<String> nodoscol;
   String tipo;
+  bool direct;
   List<double> min_maxcol=new List<double>();
 }
 
@@ -24,7 +28,8 @@ class _Row_max_minState extends State<Row_max_min> {
   ScrollController controlleraux2=ScrollController();
   ScrollController controlleraux3=ScrollController();
   String tipo;
-  _Row_max_minState(List<List<double>> this.matriz2,this.nodos2,this.nodoscol,this.tipo,this.min_maxcol);
+  bool direct;
+  _Row_max_minState(List<List<double>> this.matriz2,this.nodos2,this.nodoscol,this.tipo,this.min_maxcol,this.direct);
   @override
   void initState() {
     controller3.addListener((){
@@ -60,13 +65,22 @@ class _Row_max_minState extends State<Row_max_min> {
       }
     }
     print(min_maxrow);
+
   }
+
+  bool bloquedirect=false;
   ScrollController contlist=new ScrollController();
   @override
   Widget build(BuildContext context) {
-
+    if(direct&&!bloquedirect){
+      SchedulerBinding.instance.addPostFrameCallback((_){
+        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Resultado(matriz,nodoscol,nodos2,tipo,min_maxrow,widget.matrizorig,direct)));
+        setState(() {
+          bloquedirect=!bloquedirect;
+        });
+      });
+    }
     Size ScreenSize=MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -101,7 +115,7 @@ class _Row_max_minState extends State<Row_max_min> {
                     Container(
                         width:ScreenSize.width*0.8 ,
                         child: Center(
-                          child:Text("Matriz",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
+                          child:Text(tipo=="min"?"Minimizando":"Maximizando",style: TextStyle(color: Colors.white,fontSize: ScreenSize.width/15,fontWeight: FontWeight.bold,
                           ),
 
                           ),
@@ -116,17 +130,23 @@ class _Row_max_minState extends State<Row_max_min> {
                         height: ScreenSize.height/10-5,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ScreenSize.height)),
                         onPressed: (){
-
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Resultado(matriz,nodoscol,nodos2,tipo,min_maxrow,widget.matrizorig,direct)));
                         },
                         color: Color(0xffFFC857),
                         child: Icon(Icons.arrow_forward,color: Color(0xff084C61),size: ScreenSize.width*0.07),
                       ),
                     ),
                   ])),
+          Container(
+            height: 100,
+            child: Center(
+              child: Text('Paso 2',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Color(0xff084C61)),),
+            ),
+          ),
           Row(
             children: <Widget>[
               Container(
-                height: ScreenSize.height-ScreenSize.height/5,
+                height: ScreenSize.height-ScreenSize.height/5-100,
                 width: ScreenSize.width*0.75,
                 child:Center(
 
@@ -234,7 +254,7 @@ class _Row_max_minState extends State<Row_max_min> {
 
               ),
               Container(
-                height: ScreenSize.height-ScreenSize.height/5,
+                height: ScreenSize.height-ScreenSize.height/5-100,
                 width: ScreenSize.width*0.25,
                 child:Container(
                     padding: EdgeInsets.all(ScreenSize.width/20),
@@ -255,7 +275,7 @@ class _Row_max_minState extends State<Row_max_min> {
                         )
                         ,
                         Container(
-                          height: (ScreenSize.width-ScreenSize.width/10)/7*6+2*ScreenSize.width/20-(ScreenSize.width-2*ScreenSize.width/20)/(6+1)-41,
+                          height: (ScreenSize.width-ScreenSize.width/10)/7*7+2*ScreenSize.width/20-(ScreenSize.width-2*ScreenSize.width/20)/(6+1)-41,
                           width: (ScreenSize.width-2*ScreenSize.width/20)/(6+1),
                           child: ListView(
 
