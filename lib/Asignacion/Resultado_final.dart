@@ -154,6 +154,9 @@ class _ResultadofinalState extends State<Resultadofinal> {
 
                     onPressed: (){
                       Navigator.pop(context);
+                      Navigator.pop(this.context);
+                      Navigator.pop(this.context);
+                      Navigator.pop(this.context);
                     },
                     child: Text('Volver',style: TextStyle(color: Color(0xff084C61))),
                     color: Color(0xffFFC857),

@@ -1,100 +1,176 @@
-import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:grafos/Grafos_game.dart';
-import 'package:flutter/gestures.dart';
-import 'package:grafos/Johnson/main_johnson.dart';
-void main(){
-  runApp(
-      MaterialApp(
-        home: MyApp(),
-      )
-  );
-}
-class MyApp extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _MyApp();
-  }
+import 'package:grafos/NorOeste/MainNorOeste.dart';
+import 'package:grafos/grafos.dart';
 
+void main() => runApp(MyApp());
+
+class Main extends StatefulWidget {
+  @override
+  _MainState createState() => _MainState();
 }
 
-class _MyApp extends State<MyApp>{
-  LangawGame game;
-  @override
-  void iniciar()async{
+class _MainState extends State<Main> {
+  Widget AlertNorOeste(formkey,numrow,numcol,size){
+    return AlertDialog(
+        title: Text('Algoritmo NorOeste'),
+        content: Form(
+          key: formkey,
+          child: Container(
+            height: size.height*0.3,
+            width: size.width,
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  child:Text('Numero de Filas:'),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
 
-    WidgetsFlutterBinding.ensureInitialized();
-    game=new LangawGame(context);
-    await Flame.util.fullScreen();
-    await Flame.util.setOrientation(DeviceOrientation.portraitUp);
-    HorizontalDragGestureRecognizer hdr=HorizontalDragGestureRecognizer();
-    
-    Flame.util.addGestureRecognizer(hdr
-    ..onUpdate=(startDetails)=>game.ondragstart(startDetails.globalPosition)
-    );
-    Flame.util..addGestureRecognizer(new TapGestureRecognizer()
-    ..onTapDown=(TapDownDetails tapdetails)=>game.onTapDon(tapdetails.globalPosition)
+                  keyboardType: TextInputType.number,
+                  controller: numrow,
+                  validator: (val){
+                    if(val.isEmpty){
+                      return "Ingrese un valor";
+                    }
+                    else
+                    if(double.parse(val)<=0)
+                      return "El valor debe ser positivo y diferente de 0";
+                    else
+                      return null;
+                  },
+                ),
+                Divider(
+                  color: Colors.transparent,
+                  height: 20,
+                ),
+                Container(
+                  child:Text('Numero de Columnas:'),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextFormField(
+                    decoration: InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
+                    keyboardType: TextInputType.number,
+                    controller: numcol,
+                    validator: (val){
+                      if(val.isEmpty){
+                        return "Ingrese un valor";
+                      }
+                      else
+                      if(double.parse(val)<=0)
+                        return "El valor debe ser positivo y diferente de 0";
+                      else
+                        return null;
+                    },
+                  ),
+                ),
+                Divider(
+                  color: Colors.transparent,
+                  height: 20,
+                ),
+                Container(
+                  child: MaterialButton(
+                    child: Text('Aceptar'),
+                    color: Colors.blueAccent,
+                    onPressed: (){
+                       FocusScope.of(context).requestFocus(new FocusNode());
+                      if(formkey.currentState.validate()){
+
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>MainNorOeste(double.parse(numcol.text),double.parse(numrow.text))));
+                      }
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
     );
   }
-  void initState() {
-    iniciar();
-  }
-  
   @override
   Widget build(BuildContext context) {
-
-    // TODO: implement build
-  Size ScreenSize=MediaQuery.of(context).size;
+    var size=MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
-        height: ScreenSize.height,
-        width: ScreenSize.width,
-        child:ListView(
-          physics: NeverScrollableScrollPhysics(),
+        child: ListView(
           children: <Widget>[
-            Container(
-              height: ScreenSize.height/10,
-              width: ScreenSize.width,
-              color: Color(0xff323031),
-              child: Row(
-                children: <Widget>[
-                  Container(
+            Stack(
+              children: <Widget>[
+                Container(
+                  color: Colors.black.withOpacity(0.8),
+                  height: size.height*0.5-80,
+                ),
+                Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Center(
+                            child:Image.asset("assets/icono2.png",width: size.width*0.5,height: size.height*0.5-80,)
+                        ),
+                        Divider(
+                          height: 80,
+                          color: Colors.transparent,
+                        ),
+                        Container(
+                          height: size.height*0.5,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Center(
+                                child: MaterialButton(
+                                  color: Colors.blueGrey,
+                                  onPressed: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>Grafos()));
+                                  },
+                                  child: Text('Grafos',style: TextStyle(color: Colors.white),),
+                                ),
+                              ),Center(
+                                child: MaterialButton(
+                                  color: Colors.indigo,
+                                  onPressed: (){
+                                    TextEditingController numcol=TextEditingController();
+                                    TextEditingController numrow=TextEditingController();
+                                    final formkey=GlobalKey<FormState>();
+                                    showDialog(context: context,
+                                        builder: (BuildContext context){
+                                          return AlertNorOeste(formkey,numcol,numrow,size);
+                                        }
+                                    );
 
-                    width:ScreenSize.width*0.8,
-                    child: Center(child: Text("Grafos",style: TextStyle(color: Colors.white,fontFamily: 'CenturyGothic',fontSize: ScreenSize.width*0.05),),
+                                  },
+                                  child: Text('Nor Oeste',style: TextStyle(color: Colors.white),),
+                                ),
+                              )
+                            ],
+                          ),
                         )
-                  ),
-                  Container(
-                    width:ScreenSize.width*0.2,
-                    padding: EdgeInsets.only(left: (ScreenSize.width*0.2-ScreenSize.width/9)/2,right: (ScreenSize.width*0.2-ScreenSize.width/9)/2),
-
-                    child: MaterialButton(
-                      padding: EdgeInsets.all(0),
-                      onPressed: (){
-                        game.bloqueototal=true;
-                        Navigator.push(context,MaterialPageRoute(builder: (BuildContext context){
-                            return Main_john(game);
-                        }));
-                      },
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(ScreenSize.width/18))),
-                      minWidth: ScreenSize.width/9,
-                      height: ScreenSize.width/9,
-                      color: Color(0xff084C61),
-                      child: Center(heightFactor: 1,child: Icon(Icons.grain,color: Colors.white,),),
-                    ),
-                  )
-                ],
-              )
-            ),
-            Container(
-              height: ScreenSize.height*0.9,
-             child: game.widget!=null?game.widget:Container(child: Text("Cargando")),
+                      ],
+                    )
+                ),
+                Positioned(
+                    bottom: 10,
+                    child: Container(
+                      width: size.width,
+                      child: Center(
+                        child: Text('Grafos-2020',style: TextStyle(color: Colors.black38),),
+                      ),
+                    )
+                )
+              ],
             )
           ],
         ),
-      ),
+      )
+    );
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Material App',
+      home: Main()
     );
   }
 }
