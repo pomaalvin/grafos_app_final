@@ -21,7 +21,7 @@ class _MainState extends State<Main> {
             child: ListView(
               children: <Widget>[
                 Container(
-                  child:Text('Numero de Filas:'),
+                  child:Text('Numero de Columnas:'),
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -46,7 +46,7 @@ class _MainState extends State<Main> {
                   height: 20,
                 ),
                 Container(
-                  child:Text('Numero de Columnas:'),
+                  child:Text('Numero de Filas:'),
                 ),TextFormField(
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(5),
