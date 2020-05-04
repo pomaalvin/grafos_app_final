@@ -21,10 +21,12 @@ class _MainState extends State<Main> {
             child: ListView(
               children: <Widget>[
                 Container(
-                  child:Text('Numero de Filas:'),
+                  child:Text('Numero de Columnas:'),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
+                  decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(5),
+                      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
 
                   keyboardType: TextInputType.number,
                   controller: numrow,
@@ -44,12 +46,11 @@ class _MainState extends State<Main> {
                   height: 20,
                 ),
                 Container(
-                  child:Text('Numero de Columnas:'),
-                ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextFormField(
-                    decoration: InputDecoration(border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
+                  child:Text('Numero de Filas:'),
+                ),TextFormField(
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(5),
+                        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
                     keyboardType: TextInputType.number,
                     controller: numcol,
                     validator: (val){
@@ -63,7 +64,6 @@ class _MainState extends State<Main> {
                         return null;
                     },
                   ),
-                ),
                 Divider(
                   color: Colors.transparent,
                   height: 20,
