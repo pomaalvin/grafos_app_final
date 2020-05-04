@@ -8,23 +8,44 @@ class NorOeste{
   List<double> disponibilidad = new List();
   List<List<double>> matriz = new List<List<double>>();
   NorOeste(this.matriz,this.demanda,this.disponibilidad,this.tipo);
-  double operacion() {
+  List<List<double>>  operacion() {
     List<List<double>> sol = noroe1(matriz);
+    print("sol23"+sacardouble(sol).toString());
+    var maxmin=sacardouble(sol);
     while (true) {
+
       List<List<double>> solaux = matsol(sol, tipo);
       if (solaux == null) {
         break;
       }
       else {
-        sol = solaux;
+        if(tipo=="min"){
+          if(sacardouble(sol)>maxmin){
+            break;
+          }
+          else{
+            maxmin=sacardouble(sol);
+            sol = solaux;
+          }
+
+        }
+        else{
+          if(sacardouble(sol)<maxmin){
+            break;
+          }
+          else{
+            maxmin=sacardouble(sol);
+            sol = solaux;
+          }
+
+        }
       }
     }
-    print("solfinal:");
-    double finalsol=sacardouble(sol);
-    print(finalsol);
-    return finalsol;
+    return sol;
   }
   List<List<String>> quitarnox(matriz){
+    print("antes de quitar");
+    print(matriz);
     for(int i=0;i<matriz.length;i++){
       for(int j=0;j<matriz[i].length;j++){
         if(matriz[i][j]!="0.0"){
@@ -65,7 +86,64 @@ class NorOeste{
           }
         }
       }}
+    for(int i=0;i<matriz.length;i++){
+      for(int j=0;j<matriz[i].length;j++){
+        if(matriz[i][j]!="0.0"){
+          int cf=0;
+          int cc=0;
+          for(int k=0;k<matriz.length;k++){
+            if(matriz[k][j]!="0.0"||matriz[k][j]=="x"){
+              cf++;
+            }
+          }
+          for(int k=0;k<matriz[i].length;k++){
+            if(matriz[i][k]!="0.0"||matriz[i][k]=="x"){
+              cc++;
+            }
+          }
+          if(cf==1||cc==1){
+            matriz[i][j]="0.0";
+          }
+        }
+      }}
+    for(int i=0;i<matriz.length;i++){
+      for(int j=0;j<matriz[i].length;j++){
+        if(matriz[i][j]!="0.0"){
+          int cf=0;
+          int cc=0;
+          for(int k=0;k<matriz.length;k++){
+            if(matriz[k][j]!="0.0"||matriz[k][j]=="x"){
+              cf++;
+            }
+          }
+          for(int k=0;k<matriz[i].length;k++){
+            if(matriz[i][k]!="0.0"||matriz[i][k]=="x"){
+              cc++;
+            }
+          }
+          if(cf==1||cc==1){
+            matriz[i][j]="0.0";
+          }
+        }
+      }}
+    print("despues de quitar");
+    print(matriz);
     return matriz;
+  }
+  bool verificarmatriz(matriz){
+    int c=0;
+    for(int i=0;i<matriz.length;i++){
+      for(int j=0;j<matriz[i].length;j++){
+          if(matriz[i][j]!="0.0"&&matriz[i][j]!="0"){
+            c++;
+          }
+      }
+    }
+    if(c>0){
+      return true;
+    }
+    else
+      return false;
   }
   List<List<double>> matsol(matrizsol1,tipo){
     List<int> matzimenor=matzmenosor(matrizsol1,tipo);
@@ -84,7 +162,10 @@ class NorOeste{
         matrizx.add(auxili);
       }
       matrizx[matzimenor[0]][matzimenor[1]]="x";
+      print("antes de quitar");
+      print(matrizx);
       matrizx=quitarnox(matrizx);
+
       List<int> pivot=[matzimenor[0],matzimenor[1]];
       for(int f=0;f<matrizx.length;f++){
         if(matrizx[f][pivot[1]]!="0.0"&&matrizx[f][pivot[1]]!="x"){
@@ -97,7 +178,11 @@ class NorOeste{
       bool signo=true;
       print(matrizx);
       print(pivot);
+      if(!verificarmatriz(matrizx)){
+        return null;
+      }
       while(!fin){
+        print("matrix123"+matrizx.toString());
         bool encontrado=false;
         for(int i=0;i<matrizx[0].length;i++){
           String val=matrizx[pivot[0]][i];
@@ -258,13 +343,20 @@ class NorOeste{
     demaaux[pivot[1]]=dispaux[pivot[0]]-matrizz[pivot[0]][pivot[1]];
     bool flag=true;
     int fila=0;
+    int c=0;
     int columna=0;
     while(demaaux.contains(-89879879)||dispaux.contains(-89879879)){
+
+        print(matrizz);
         print(pivot);
         print(dispaux);
         print(demaaux);
+        print(flag);
+        print(fila);
+        print(columna);
       if(flag){
         for(int j=0;j<matrizz[fila].length;j++){
+          print("aqui");
           if(matrizz[fila][j]!=0){
             pivot=[fila,j];
           }
@@ -277,6 +369,14 @@ class NorOeste{
           {demaaux[pivot[1]]=matrizz[pivot[0]][pivot[1]]-dispaux[pivot[0]];
             fcamb=true;
             }
+          if(c>50){
+            if(dispaux[pivot[0]]==-89879879&&demaaux[pivot[1]]==-89879879)
+            {
+              dispaux[pivot[0]]=matrizz[pivot[0]][pivot[1]];
+              demaaux[pivot[1]]=0;
+              fcamb=true;
+            }
+          }
           if(fcamb){
             bool tfila=false;
             for(int i=0;i<matrizz.length;i++){
@@ -286,12 +386,14 @@ class NorOeste{
               }
             }
             if(tfila){
-              fila=j;
+
+              columna=j;
               flag=false;
-              break;
             }
           }
           if(j+1==matrizz[fila].length){
+            print("fila"+fila.toString());
+            print("tam"+matrizcos.length.toString());
             if(fila+1==matrizcos.length){
               fila=0;
             }
@@ -319,6 +421,14 @@ class NorOeste{
           {demaaux[pivot[1]]=matrizz[pivot[0]][pivot[1]]-dispaux[pivot[0]];
           ccamb=true;
           }
+          if(c>50){
+            if(dispaux[pivot[0]]==-89879879&&demaaux[pivot[1]]==-89879879)
+            {
+              dispaux[pivot[0]]=matrizz[pivot[0]][pivot[1]];
+              demaaux[pivot[1]]=0;
+              ccamb=true;
+            }
+          }
           if(ccamb){
             bool tcol=false;
             for(int i=0;i<matrizz.length;i++){
@@ -328,7 +438,7 @@ class NorOeste{
               }
             }
             if(tcol){
-              columna=j;
+              fila=j;
               flag=true;
               break;
             }
@@ -346,13 +456,18 @@ class NorOeste{
 
         }
       }
+      c++;
 
     }
+
+    print(dispaux);
+    print(demaaux);
     for(int i=0;i<matrizz.length;i++){
       for(int j=0;j<matrizz[i].length;j++){
         matrizz[i][j]=demaaux[j]+dispaux[i];
       }
     }
+    print(matrizz);
     return matrizz;
   }
   double sacardouble(matrizcos){

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grafos/NorOeste/NorOeste.dart';
+import 'package:grafos/NorOeste/ResultNorOeste.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 class MainNorOeste extends StatefulWidget {
   @override
@@ -96,13 +97,22 @@ class _MainNorOesteState extends State<MainNorOeste> {
               List<List<double>> matdou=inputmat.map((res)=>res.map((res2)=>double.parse(res2.text)).toList()).toList();
               List<double> di=disp.map((res)=>double.parse(res.text)).toList();
               List<double> de=dema.map((res)=>double.parse(res.text)).toList();
-              //[[1,4,7,6],[6,3,3,8],[1,9,2,1]],[4,14,6,5],[10,12,7]
               NorOeste nor=NorOeste(matdou,de,di,"max");
+              List<List<double>> solumat=nor.operacion();
+              List<List<TextEditingController>> matrizsolu=solumat.map((valor){
+                List<TextEditingController> auxi=valor.map((valor2){
+                  TextEditingController te=TextEditingController();
+                  te.text=valor2.toString();
+                  return te;
+                }).toList();
+                return auxi;
+              }
+              ).toList();
+              double result=nor.sacardouble(solumat);
+              FocusScope.of(context).requestFocus(new FocusNode());
+              Navigator.push(context,MaterialPageRoute(builder:(BuildContext context)=>ResultNorOeste(cab,cab2,matrizsolu,dema,disp,result)));
 
-              setState(() {
-                resultado=nor.operacion().toString();
-              });
-            },
+              },
           ),
 
           IconButton(
@@ -112,10 +122,20 @@ class _MainNorOesteState extends State<MainNorOeste> {
               List<double> di=disp.map((res)=>double.parse(res.text)).toList();
               List<double> de=dema.map((res)=>double.parse(res.text)).toList();
               NorOeste nor=NorOeste(matdou,de,di,"min");
-              setState(() {
-                resultado=nor.operacion().toString();
-              });
-            },
+              List<List<double>> solumat=nor.operacion();
+              List<List<TextEditingController>> matrizsolu=solumat.map((valor){
+              List<TextEditingController> auxi=valor.map((valor2){
+                TextEditingController te=TextEditingController();
+                te.text=valor2.toString();
+                return te;
+                }).toList();
+                return auxi;
+              }
+              ).toList();
+              double result=nor.sacardouble(solumat);
+              FocusScope.of(context).requestFocus(new FocusNode());
+              Navigator.push(context,MaterialPageRoute(builder:(BuildContext context)=>ResultNorOeste(cab,cab2,matrizsolu,dema,disp,result)));
+            }
           )
         ],
       ),
@@ -256,14 +276,6 @@ class _MainNorOesteState extends State<MainNorOeste> {
                 ],
               ),
             ),
-            Container(
-              width: size.width,
-              height: size.height*0.1,
-              color: Colors.indigo,
-                alignment: AlignmentDirectional.center,
-                child: Text("Resultado= "+resultado.toString(),style: TextStyle(color: Colors.white,fontSize: 25),),
-
-            )
           ],
         ),
       )
