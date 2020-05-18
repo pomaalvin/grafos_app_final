@@ -193,7 +193,7 @@ class Johnson extends Game{
                           TextFormField(
                               keyboardType: TextInputType.number,
                               controller: texto,
-                              maxLength: 5,
+                              maxLength: 10,
                               validator: (value){
                                 if(value.isEmpty){
                                   return"Ingrese un valor";
