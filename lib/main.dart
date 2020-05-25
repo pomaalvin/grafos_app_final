@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grafos/Arboles/Arboles_main.dart';
 import 'package:grafos/Cournot/Cournot_main.dart';
 import 'package:grafos/NorOeste/MainNorOeste.dart';
+import 'package:grafos/Sort/SortMain.dart';
 import 'package:grafos/grafos.dart';
 
 void main() => runApp(MyApp());
@@ -28,7 +29,6 @@ class __AlertCournotState extends State<_AlertCournot> {
 
   @override
   void dispose() {
-    // Clean up the focus node when the Form is disposed.
     myFocusNode.dispose();
 
     super.dispose();
@@ -388,7 +388,21 @@ class _MainState extends State<Main> {
                                         }
                                     );
                                   },
-                                  child: Text('Cournot',style: TextStyle(color: Colors.black),),
+                                  child: Text('Cournot',style: TextStyle(color: Colors.white),),
+                                ),
+                              ),
+                              Center(
+                                child: MaterialButton(
+                                  color: Color(0xff144D5F),
+                                  onPressed: (){
+                                    showDialog(context: context,
+                                        builder: (BuildContext context){
+                                          return _AlertSort()
+                                          ;
+                                        }
+                                    );
+                                  },
+                                  child: Text('Sort',style: TextStyle(color: Colors.white),),
                                 ),
                               )
                             ],
@@ -421,6 +435,148 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       home: Main()
+    );
+  }
+}
+
+class _AlertSort extends StatefulWidget {
+  @override
+  __AlertSortState createState() => __AlertSortState();
+}
+
+class __AlertSortState extends State<_AlertSort> {
+  FocusNode myFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+
+    myFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+
+    super.dispose();
+  }
+  final formkey=GlobalKey<FormState>();
+  TextEditingController lista=new TextEditingController();
+  TextEditingController x=new TextEditingController();
+  String valor="";
+  List<double> arraypunt=new List();
+  @override
+  Widget build(BuildContext context) {
+    var size=MediaQuery.of(context).size;
+    return AlertDialog(
+
+        title: Text('Algoritmo Sort'),
+        content: Form(
+          key: formkey,
+          child: Container(
+            height: size.height*0.3,
+            width: size.width,
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  child:Text('Array puntos:'),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  width: size.width,
+                  decoration: BoxDecoration(border: Border.all(color: Colors.black.withOpacity(0.5),width: 1),borderRadius: BorderRadius.all(Radius.circular(size.height*0.0125))),
+                  height: size.height*0.05,
+                  child:
+                  ListView(
+                    padding: EdgeInsets.all(0),
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    children: <Widget>[
+                      Container(
+                          padding:EdgeInsets.only(left: 8,right: 8),
+
+                          child:Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(valor,style: TextStyle(color: Color(0xff23615C)),),
+                            ],
+                          )
+                      )
+                    ],
+                  )
+                  ,
+                ),
+                Divider(
+                  color: Colors.transparent,
+                  height: 20,
+                ),
+                Row(
+                  children: <Widget>[
+                    Container(
+                      width: size.width*0.2,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(5),
+                            border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black38),borderRadius: BorderRadius.all(Radius.circular(5)))),
+                        keyboardType: TextInputType.number,
+                        controller: x,
+                        focusNode: myFocusNode,
+                        validator: (val){
+                          if(val.isEmpty){
+                            return " ";
+                          }
+                          else
+                            return null;
+                        },
+                      ),
+                    ),
+                    VerticalDivider(
+                        width: size.width*0.02
+                    ),
+
+                    VerticalDivider(
+                      width: size.width*0.05,
+                    ),
+                    Container(
+                      width: size.width*0.20,
+                      child: MaterialButton(
+                        child: Text('Add'),
+                        padding: EdgeInsets.all(2),
+                        color: Colors.teal,
+                        onPressed: (){
+                          if(x.text.isNotEmpty){
+                            setState(() {
+                              arraypunt.add(double.parse(x.text));
+                              valor+=x.text+",";
+                              x.text="";
+                              myFocusNode.requestFocus();
+                            });
+                          }
+                        },
+                      ),
+                    ),
+
+                  ],
+                ),
+                Divider(
+                  color: Colors.transparent,
+                  height: 20,
+                ),
+                Container(
+                  child: MaterialButton(
+                    child: Text('Aceptar'),
+                    color: Colors.blueAccent,
+                    onPressed: (){
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)=>SortMain(arraypunt)));
+
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
     );
   }
 }
