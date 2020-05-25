@@ -13,12 +13,12 @@ class Valor{
   double text;
   Size ScreenSize;
   Valor(this.ScreenSize,this.nodo1,this.nodo2,this.text){
-    texto1=new TextSpan(text: "T: "+text.toString().toUpperCase(),style: TextStyle(color: Colors.black,fontSize: (ScreenSize.width/20)/2));
+    texto1=new TextSpan(text: "T: "+text.round().toString().toUpperCase(),style: TextStyle(color: Colors.black,fontSize: (ScreenSize.width/20)/2));
     tp=new TextPainter(text: texto1,textDirection: TextDirection.rtl);
     tp.layout();
     centtext=Offset((nodo1.x+nodo2.x)/2,(nodo1.y+nodo2.y)/2);
     nodoPaint=Paint();
-    nodoPaint.color=Colors.lightGreen;
+    nodoPaint.color=text.round()!=0?Colors.red:Colors.lightGreen;
   }
   void render(Canvas c){
     c.drawCircle(centtext,ScreenSize.width/25,nodoPaint);
