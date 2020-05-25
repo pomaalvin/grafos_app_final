@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,8 @@ import 'package:grafos/Cournot/Cournot_graph.dart';
 import 'package:grafos/Grafos_game.dart';
 import 'package:flutter/gestures.dart';
 import 'package:grafos/Johnson/grafos_john.dart';
+import 'package:grafos/componentes/Conexion_Arbol.dart';
+import 'package:grafos/componentes/Conexion_Cournot.dart';
 import 'package:grafos/componentes/Nodo_Arbol.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 class Main_Cournot extends StatefulWidget{
@@ -25,6 +29,7 @@ class _Main_Cournot extends State<Main_Cournot>{
   List<Nodo_Arbol> nodosl;
   List<Nodo_Arbol> pila1;
   ScrollController listc;
+  Size ScreenSize;
   List<List<double>> lista;
   List<double> medioR=List();
   _Main_Cournot(this.lista);
@@ -83,12 +88,95 @@ class _Main_Cournot extends State<Main_Cournot>{
 
       });
   }
+  String cuadrante(x,y){
+    String cuadra="";
+    if(y>=medioR[1]){
+      cuadra+="N";
+    }
+    else{
+      cuadra+="S";
+    }
+    if(x>=medioR[0]){
+      cuadra+="O";
+    }
+    else{
+      cuadra+="E";
+    }
+    return cuadra;
+  }
+  List<double>sacarDistan(){
+    List<double> auxi=List();
+    List<double> auxi2=List();
+    for(int i=0;i<lista.length;i++){
+      double mmx=0;
+      double ang=0;
+      if(lista[i][0]-medioR[0]==0){
+        ang=90;
+      }
+      else{
+      double mmp=(lista[i][1]-medioR[1])/(lista[i][0]-medioR[0]);
 
+      print(mmp);
+      ang=atan((mmp-mmx)/(1+mmp+mmx));
+      ang=ang*180/pi;
+      ang=ang.abs();}
+      String cu=cuadrante(lista[i][0], lista[i][1]);
+      print(cu);
+      auxi2.add(ang.abs());
+      switch(cu){
+        case "NE":
+          ang=180-ang;
+          break;
+        case "SE":
+          ang=180+ang;
+          break;
+        case "SO":
+          ang=360-ang;
+          break;
+
+      }
+
+      auxi.add(ang.abs());
+    }
+    print(auxi);
+    print(auxi2);
+    List<List<double>> listauxi2=List();
+    while(true){
+      double menor=5679009;
+      int imenor=0;
+      for(int i=0;i<auxi.length;i++){
+        if(auxi[i]<menor&&auxi[i]!=-78945645){
+          menor=auxi[i];
+          imenor=i;
+        }
+      }
+      if(menor==5679009)
+        break;
+      else{
+      listauxi2.add(lista[imenor]);
+      auxi[imenor]=-78945645;}
+    }
+    print(listauxi2);
+    double mx=ScreenSize.width*5/2;
+    double my=(ScreenSize.height*0.7)*5/2-1;
+    Size size2=Size(ScreenSize.width*5,ScreenSize.height*5);
+    game.actividades.add(Conexion_Cournot(size2,mx+listauxi2[0][0]*55,my-listauxi2[0][1]*55,mx+listauxi2[listauxi2.length-1][0]*55,my-listauxi2[listauxi2.length-1][1]*55));
+    game.actividades.add(Conexion_Cournot(size2,mx+listauxi2[0][0]*55,my-listauxi2[0][1]*55,mx+listauxi2[1][0]*55,my-listauxi2[1][1]*55));
+
+    for(int i=0;i<listauxi2.length;i++){
+      if(i<listauxi2.length-1){
+        game.actividades.add(Conexion_Cournot(size2,mx+listauxi2[i][0]*55,my-listauxi2[i][1]*55,mx+listauxi2[i+1][0]*55,my-listauxi2[i+1][1]*55));
+
+      }
+    }
+
+
+  }
   @override
   Widget build(BuildContext context) {
 
     // TODO: implement build
-    Size ScreenSize=MediaQuery.of(context).size;
+    ScreenSize=MediaQuery.of(context).size;
     return Scaffold(
         body:Container(
             height: ScreenSize.height,
@@ -105,7 +193,7 @@ class _Main_Cournot extends State<Main_Cournot>{
                         Container(
 
                             width:ScreenSize.width*0.8,
-                            child: Center(child: Text("Nash/Cournot",style: TextStyle(color: Colors.white,fontFamily: 'CenturyGothic',fontSize: ScreenSize.width*0.035),),
+                            child: Center(child: Text("Compet",style: TextStyle(color: Colors.white,fontFamily: 'CenturyGothic',fontSize: ScreenSize.width*0.035),),
                             )
                         ),
                         Container(
@@ -140,6 +228,7 @@ class _Main_Cournot extends State<Main_Cournot>{
                           padding: EdgeInsets.all(0),
                           onPressed: (){
                             sacarPunto();
+                            sacarDistan();
                           },
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(ScreenSize.width/18))),
                           minWidth: ScreenSize.width/9,
