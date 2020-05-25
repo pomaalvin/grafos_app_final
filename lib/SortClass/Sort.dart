@@ -26,7 +26,7 @@ void swap(List list, int steps, int i) {
 //----SELECTION----
 insertionSort(List list) {
   if (list == null || list.length == 0)
-  {
+  { 
     print('Error en lista');
   }else{
     int n = list.length;
@@ -44,4 +44,34 @@ insertionSort(List list) {
     return list;
   }
 }
-
+//Shell Sort
+shellSort(List list) {
+  if (list == null || list.length == 0)
+  {
+    print('Error en lista');
+  }else{
+    int n = list.length;
+    int h=1;
+    while(h < n/3){
+      h=3*h+1;
+    }
+    while(h>=1){
+      for(int i=h; i < n; i++) {
+        for(int j=i; j>=h && less(list[j],list[j-h]); j=j-h) {
+          swap(list,j,j-h);
+        }
+      }  
+      h=(h/3) as int;
+    }    
+    return list;
+  }
+}
+//Shell Sort
+//Comparador si es menor o no xdxd.
+bool less(int v, int w ){
+  if(v > w) {
+    return true;
+  }else{
+    return false;
+  }
+}
