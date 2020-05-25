@@ -10,6 +10,7 @@ import 'package:grafos/Tabla.dart';
 import 'package:grafos/componentes/Button.dart';
 import 'package:grafos/componentes/Actividad.dart';
 import 'package:grafos/componentes/Conexion_Arbol.dart';
+import 'package:grafos/componentes/Conexion_Cournot.dart';
 import 'package:grafos/componentes/Nodo.dart';
 import 'package:flutter/gestures.dart';
 import 'dart:math';
@@ -23,7 +24,7 @@ class Cournot_graph extends Game{
   double tileSize;
   List<Nodo_Cournot> nodos;
   BuildContext context;
-  List<Conexion_Arbol> actividades;
+  List<Conexion_Cournot> actividades;
   conectar(){
     Size size=MediaQuery.of(this.context).size;
 
@@ -32,9 +33,9 @@ class Cournot_graph extends Game{
     Size size2=Size(size.width*5,size.height*5);
     nodos.add(Nodo_Cournot(size2,mx+datos[0][0]*55,my-datos[0][1]*55,datos[0][0].toString()+","+datos[0][1].toString(),"normal"));
     for(int i=1;i<datos.length;i++){
-
       nodos.add(Nodo_Cournot(size2,mx+datos
       [i][0]*55,my-datos[i][1]*55,datos[i][0].toString()+","+datos[i][1].toString(),"normal"));
+
     }
   }
 
@@ -114,13 +115,13 @@ class Cournot_graph extends Game{
       y02-=55;
     }
     nodos.forEach((Nodo_Cournot nodo)=>nodo.render(canvas));
-    actividades.forEach((Conexion_Arbol act)=>act.render(canvas));
+    actividades.forEach((Conexion_Cournot act)=>act.render(canvas));
 
 
   }
   void initialize() async{
     nodos=List<Nodo_Cournot>();
-    actividades=List<Conexion_Arbol>();
+    actividades=List<Conexion_Cournot>();
     resize(await Flame.util.initialDimensions());
     conectar();
 
