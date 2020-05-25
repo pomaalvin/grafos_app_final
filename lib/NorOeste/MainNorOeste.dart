@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:grafos/NorOeste/NorOeste.dart';
-import 'package:grafos/NorOeste/ResultNorOeste.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
+
+import 'NorOeste.dart';
+import 'ResultNorOeste.dart';
 class MainNorOeste extends StatefulWidget {
   @override
   _MainNorOesteState createState() => _MainNorOesteState(numrow,numcol);
   double numcol,numrow;
   MainNorOeste(this.numrow,this.numcol);
 }
-
 List<List<TextEditingController>> inputmat=List();
 List<TextEditingController> cab=List();
 List<TextEditingController> cab2=List();

@@ -26,7 +26,6 @@ class __AlertCournotState extends State<_AlertCournot> {
 
     myFocusNode = FocusNode();
   }
-
   @override
   void dispose() {
     myFocusNode.dispose();
