@@ -43,7 +43,7 @@ class __AlertCournotState extends State<_AlertCournot> {
       var size=MediaQuery.of(context).size;
     return AlertDialog(
 
-          title: Text('Algoritmo Cournot'),
+          title: Text('Algoritmo Compet'),
           content: Form(
             key: formkey,
             child: Container(
@@ -387,7 +387,7 @@ class _MainState extends State<Main> {
                                         }
                                     );
                                   },
-                                  child: Text('Cournot',style: TextStyle(color: Colors.white),),
+                                  child: Text('Compet',style: TextStyle(color: Colors.white),),
                                 ),
                               ),
                               Center(

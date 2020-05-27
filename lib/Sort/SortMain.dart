@@ -16,6 +16,7 @@ class _SortMainState extends State<SortMain> {
   List<double> arraysel=List();
   List<double> arrayins=List();
   List<double> arrayshe=List();
+  List<double> arraymer=List();
   List<List<int>> pasSelection=List();
   List<List<int>> pasInsertion=List();
   List<List<int>> pasShell=List();
@@ -31,6 +32,8 @@ class _SortMainState extends State<SortMain> {
   int Sheactivecon2=-1;
   int Sheactiveconok1=-1;
   int Sheactiveconok2=-1;
+  int Mergeact=-1;
+  int Mergeinact=-1;
   _SortMainState(this.array);
   @override
   void initState() {
@@ -40,6 +43,7 @@ class _SortMainState extends State<SortMain> {
       arraysel.add(dato);
       arrayins.add(dato);
       arrayshe.add(dato);
+      arraymer.add(dato);
     }
   }
   @override
@@ -85,7 +89,7 @@ class _SortMainState extends State<SortMain> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Container(
-                  width:ScreenSize.width*0.3,
+                  width:ScreenSize.width*0.2,
                   padding: EdgeInsets.all(0.6),
 
                   child: MaterialButton(
@@ -105,7 +109,7 @@ class _SortMainState extends State<SortMain> {
                   ),
                 ),
                 Container(
-                  width:ScreenSize.width*0.3,
+                  width:ScreenSize.width*0.2,
                   padding: EdgeInsets.all(0.6),
                   child: MaterialButton(
                     padding: EdgeInsets.all(0),
@@ -123,7 +127,7 @@ class _SortMainState extends State<SortMain> {
                     child: Center(heightFactor: 1,child: Text("Insertion",style: TextStyle(color: Color(0xff323031))),),
                   ),
                 ),Container(
-                  width:ScreenSize.width*0.3,
+                  width:ScreenSize.width*0.2,
                   padding: EdgeInsets.all(0.6),
                   child: MaterialButton(
                     padding: EdgeInsets.all(0),
@@ -139,6 +143,22 @@ class _SortMainState extends State<SortMain> {
                     height: ScreenSize.width/9,
                     color: Color(0xff1BB377),
                     child: Center(heightFactor: 1,child: Text("Shell",style: TextStyle(color: Color(0xff323031)),),),
+                  ),
+                ),Container(
+                  width:ScreenSize.width*0.2,
+                  padding: EdgeInsets.all(0.6),
+                  child: MaterialButton(
+                    padding: EdgeInsets.all(0),
+                    onPressed: (){
+                      setState(() {
+                        colorMerge();
+                      });
+                    },
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(ScreenSize.width/18))),
+                    minWidth: ScreenSize.width/9,
+                    height: ScreenSize.width/9,
+                    color: Color(0xff1BB377),
+                    child: Center(heightFactor: 1,child: Text("Merge",style: TextStyle(color: Color(0xff323031)),),),
                   ),
                 )
               ],
@@ -222,6 +242,28 @@ class _SortMainState extends State<SortMain> {
                             ),
                           );
                         }).toList()
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: ScreenSize.width*0.08),
+                      height: 60,
+                      width: ScreenSize.width,
+                      child: Center(
+                        child: Text('MergeSort:',style: TextStyle(fontSize: ScreenSize.width*0.08),),
+                      ),
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: arraymer.asMap().entries.map((valor){
+                          return AnimatedContainer(
+                            width: ScreenSize.width/5,
+                            height: ScreenSize.width/5,
+                            duration: Duration(milliseconds: 100),
+                            decoration: BoxDecoration(color: Mergeact!=-1?Colors.green:Colors.blueAccent,border:Border.all(color: Colors.black)),
+                            child: Center(
+                              child: Text(valor.value.toString(),style: TextStyle(fontSize: ScreenSize.width*0.08),),
+                            ),
+                          );
+                        }).toList()
                     )
                   ],
                 )
@@ -231,6 +273,29 @@ class _SortMainState extends State<SortMain> {
         ],
       )
     );
+  }
+  colorMerge(){
+    if(Mergeact==-1){
+    setState(() {
+      Mergeact=1;
+      mergeFut();
+    });
+    }
+    else{
+      mergeSort(arraymer, 0, arraymer.length-1);
+      setState(() {
+        Mergeact=-1;
+
+      });
+    }
+
+  }
+  Future mergeFut()async{
+    Completer c=Completer();
+    Timer(Duration(milliseconds: 1000),(){
+        c.complete(colorMerge()
+        );
+    });
   }
   volverArray(arrayvolver){
     arrayvolver.clear();
@@ -461,5 +526,50 @@ class _SortMainState extends State<SortMain> {
      double temp = list[steps];
     list[steps] = list[i];
     list[i] = temp;
+  }
+  void merge(List list, int leftIndex, int middleIndex, int rightIndex) {
+    int leftSize = middleIndex - leftIndex + 1;
+    int rightSize = rightIndex - middleIndex;
+
+    List leftList = new List(leftSize);
+    List rightList = new List(rightSize);
+
+    for (int i = 0; i < leftSize; i++) leftList[i] = list[leftIndex + i];
+    for (int j = 0; j < rightSize; j++) rightList[j] = list[middleIndex + j + 1];
+
+    int i = 0, j = 0;
+    int k = leftIndex;
+
+    while (i < leftSize && j < rightSize) {
+      if (leftList[i] <= rightList[j]) {
+        list[k] = leftList[i];
+        i++;
+      } else {
+        list[k] = rightList[j];
+        j++;
+      }
+      k++;
+    }
+
+    while (i < leftSize) {
+      list[k] = leftList[i];
+      i++;
+      k++;
+    }
+
+    while (j < rightSize) {
+      list[k] = rightList[j];
+      j++;
+      k++;
+    }
+  }
+
+  void mergeSort(List list, int leftIndex, int rightIndex) {
+    if (leftIndex < rightIndex) {
+      int middleIndex = (rightIndex + leftIndex) ~/ 2;
+      mergeSort(list, leftIndex, middleIndex);
+      mergeSort(list, middleIndex + 1, rightIndex);
+      merge(list, leftIndex, middleIndex, rightIndex);
+    }
   }
 }
